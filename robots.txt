@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cig13zs.github.io/ai-token-estimator/sitemap.xml
