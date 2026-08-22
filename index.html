@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Token Estimator — BPE Token Calculator for Claude & GPT</title>
-  <meta name="description" content="Estimate prompt token counts for Claude, GPT-4, and Gemini online. Fast character-to-token ratio calculation and cost forecasting offline.">
+  <title>Token Size Estimator | Rough Local Range for Text and Code</title>
+  <meta name="description" content="Estimate a rough, model-agnostic token range from text length and script mix. Exact counts still require the target model's tokenizer.">
   <meta name="keywords" content="ai token estimator, llm token counter, claude token counter, gpt-4 token estimator, prompt token calculator">
   <meta name="author" content="jju1s">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://cig13zs.github.io/ai-token-estimator/">
 
   <!-- OpenGraph Metadata -->
-  <meta property="og:title" content="AI Token Estimator — BPE Token Calculator for Claude & GPT">
-  <meta property="og:description" content="Estimate prompt token counts for Claude, GPT-4, and Gemini online. Fast character-to-token ratio calculation and cost forecasting offline.">
+  <meta property="og:title" content="Token Size Estimator | Rough Local Range for Text and Code">
+  <meta property="og:description" content="Estimate a rough, model-agnostic token range from text length and script mix. Exact counts still require the target model's tokenizer.">
   <meta property="og:url" content="https://cig13zs.github.io/ai-token-estimator/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="jju1s Developer Tools">
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Token Estimator — BPE Token Calculator for Claude & GPT">
-  <meta name="twitter:description" content="Estimate prompt token counts for Claude, GPT-4, and Gemini online. Fast character-to-token ratio calculation and cost forecasting offline.">
+  <meta name="twitter:title" content="Token Size Estimator | Rough Local Range for Text and Code">
+  <meta name="twitter:description" content="Estimate a rough, model-agnostic token range from text length and script mix. Exact counts still require the target model's tokenizer.">
 
   <!-- JSON-LD Structured Data Schema -->
   <script type="application/ld+json">
@@ -29,7 +29,7 @@
   "@type": "WebApplication",
   "name": "Ai Token Estimator",
   "url": "https://cig13zs.github.io/ai-token-estimator/",
-  "description": "Estimate prompt token counts for Claude, GPT-4, and Gemini online. Fast character-to-token ratio calculation and cost forecasting offline.",
+  "description": "Estimate a rough, model-agnostic token range from text length and script mix. Exact counts still require the target model's tokenizer.",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "All",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
@@ -102,7 +102,7 @@
     textarea { width: 100%; height: 340px; background: #09090b; border: 1px solid var(--border); border-radius: 8px; color: #f4f4f5; padding: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 13px; line-height: 1.5; resize: vertical; }
     textarea:focus { outline: none; border-color: var(--accent); }
     .info-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 12px; color: var(--text-muted); }
-    
+
     .seo-content { margin-top: 30px; display: flex; flex-direction: column; gap: 20px; }
     .seo-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
     .seo-card h2 { font-size: 16px; margin-bottom: 12px; color: #fff; }
@@ -115,18 +115,20 @@
     footer { border-top: 1px solid var(--border); margin-top: 40px; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px; }
     footer a { color: var(--accent); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
-  </style>
+
+    :where(a, button, input, textarea, select):focus-visible { outline: 3px solid #fbbf24; outline-offset: 3px; }
+</style>
 </head>
 <body>
   <div class="container">
     <header>
       <div>
         <h1>Ai Token Estimator</h1>
-        <p class="desc">Estimate prompt token counts for Claude, GPT-4, and Gemini online. Fast character-to-token ratio calculation and cost forecasting offline.</p>
+        <p class="desc">Estimate a rough, model-agnostic token range from text length and script mix. Exact counts still require the target model's tokenizer.</p>
       </div>
       <div class="badges">
         <span class="badge">100% Client-Side / Offline</span>
-        <a href="https://ko-fi.com/jju1s" target="_blank" class="kofi-link">Buy me a coffee</a>
+        <a href="https://ko-fi.com/jju1s" target="_blank" class="kofi-link" rel="noopener noreferrer">Buy me a coffee</a>
       </div>
     </header>
 
@@ -135,14 +137,14 @@
         <div class="panel-header">
           <span class="panel-title">Input</span>
           <div class="actions">
-            <button id="btn-sample" class="secondary">Sample</button>
-            <button id="btn-clear" class="secondary">Clear</button>
+            <button type="button" id="btn-sample" class="secondary">Sample</button>
+            <button type="button" id="btn-clear" class="secondary">Clear</button>
           </div>
         </div>
         <textarea id="input" placeholder="Paste input here..."></textarea>
         <div class="info-bar">
           <span id="input-stats">Ready</span>
-          <button id="btn-run">Process</button>
+          <button type="button" id="btn-run">Process</button>
         </div>
       </div>
 
@@ -150,12 +152,12 @@
         <div class="panel-header">
           <span class="panel-title">Output</span>
           <div class="actions">
-            <button id="btn-copy">Copy Output</button>
+            <button type="button" id="btn-copy">Copy Output</button>
           </div>
         </div>
         <textarea id="output" readonly placeholder="Output will appear here..."></textarea>
         <div class="info-bar">
-          <span id="output-stats">Ready</span>
+          <span id="output-stats" role="status" aria-live="polite">Ready</span>
         </div>
       </div>
     </div>
@@ -178,40 +180,27 @@
         </details>
         <details>
           <summary>Is this tool free and open source?</summary>
-          <p>Yes, all tools are 100% free and licensed under the permissive MIT license. If this tool helped you solve an annoyance, you can support development at <a href="https://ko-fi.com/jju1s" target="_blank">ko-fi.com/jju1s</a>.</p>
+          <p>Yes, all tools are 100% free and licensed under the permissive MIT license. If this tool helped you solve an annoyance, you can support development at <a href="https://ko-fi.com/jju1s" target="_blank" rel="noopener noreferrer">ko-fi.com/jju1s</a>.</p>
         </details>
       </div>
     </div>
 
     <footer>
-      <span>Part of the <a href="https://github.com/cig13zs/About-Me" target="_blank">jju1s offline tools fleet</a></span>
-      <span>MIT License • <a href="https://github.com/cig13zs/ai-token-estimator" target="_blank">View Source on GitHub</a></span>
+      <span>Part of the <a href="https://github.com/cig13zs/About-Me" target="_blank" rel="noopener noreferrer">jju1s offline tools fleet</a></span>
+      <span>MIT License • <a href="https://github.com/cig13zs/ai-token-estimator" target="_blank" rel="noopener noreferrer">View Source on GitHub</a></span>
     </footer>
   </div>
 
   <script src="core.js"></script>
   <script>
-    const sample = "You are an expert full-stack engineer. Please review the following database migration script and provide recommendations for zero-downtime schema evolution across distributed PostgreSQL replicas.";
-        
-const inputEl = document.getElementById('input');
-const outputEl = document.getElementById('output');
+const sample = 'Paste prose, code, JSON, CJK text, or emoji here for a rough model-agnostic size range.';
+const inputEl = document.getElementById('input'), outputEl = document.getElementById('output');
 const statsEl = document.getElementById('output-stats') || document.getElementById('stats');
-
-function process() {
-  const txt = inputEl.value;
-  if (!txt.trim()) { outputEl.value = ''; if (statsEl) statsEl.textContent = 'Empty input'; return; }
-  const res = AITokenEstimator.estimate(txt);
-  outputEl.value = JSON.stringify(res, null, 2);
-  if (statsEl) statsEl.textContent = `~ ${res.gpt4} tokens (GPT-4) | ~ ${res.claude} tokens (Claude) | ${res.wordCount} words`;
-}
-
-document.getElementById('btn-run').addEventListener('click', process);
-inputEl.addEventListener('input', process);
-document.getElementById('btn-sample').addEventListener('click', () => { inputEl.value = sample; process(); });
-document.getElementById('btn-copy').addEventListener('click', () => { navigator.clipboard.writeText(outputEl.value); alert('Copied token report!'); });
-if (document.getElementById('btn-clear')) document.getElementById('btn-clear').addEventListener('click', () => { inputEl.value = ''; outputEl.value = ''; });
-
-  
+function process() { const result = AITokenEstimator.estimate(inputEl.value); outputEl.value = inputEl.value ? JSON.stringify(result, null, 2) : ''; if (statsEl) statsEl.textContent = inputEl.value ? 'Roughly ' + result.range.low + '-' + result.range.high + ' tokens; exact count needs the model tokenizer' : 'Empty input'; }
+document.getElementById('btn-run').addEventListener('click', process); inputEl.addEventListener('input', process);
+document.getElementById('btn-sample').addEventListener('click', function () { inputEl.value = sample; process(); });
+document.getElementById('btn-copy').addEventListener('click', function () { navigator.clipboard.writeText(outputEl.value); });
+if (document.getElementById('btn-clear')) document.getElementById('btn-clear').addEventListener('click', function () { inputEl.value = ''; outputEl.value = ''; });
   </script>
 </body>
 </html>

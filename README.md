@@ -1,6 +1,6 @@
-# AI Token Estimator — BPE Token Calculator for Claude & GPT
+# Token Size Estimator | Rough Local Range for Text and Code
 
-> Estimate prompt token counts for Claude, GPT-4, and Gemini online. Fast character-to-token ratio calculation and cost forecasting offline.
+> Estimate a rough, model-agnostic token range from text length and script mix. Exact counts still require the target model's tokenizer.
 
 [![Live Web App](https://img.shields.io/badge/Web_App-Live_Demo-3B82F6?style=flat-square)](https://cig13zs.github.io/ai-token-estimator/)
 [![Chrome Extension](https://img.shields.io/badge/Chrome_Extension-Manifest_V3-10B981?style=flat-square)](https://github.com/cig13zs/ai-token-estimator/releases)
@@ -10,7 +10,7 @@
 
 ---
 
-## ⚡ Key Features
+## Features
 
 - **100% Client-Side & Offline:** Pure vanilla JavaScript runtime. Zero network uploads, zero telemetry, zero analytics tracking.
 - **Instant Processing:** Zero dependencies or heavy frameworks for ultra-fast, lightweight execution.
@@ -19,13 +19,13 @@
 
 ---
 
-## 📖 How It Works
+## How it works
 
 Paste your prompt or code snippet. The tool estimates total BPE tokens, word counts, and average characters-per-token ratios.
 
 ---
 
-## 🛠️ Offline Chrome Extension Installation
+## Install the extension
 
 1. Download or clone this repository:
    ```bash
@@ -38,7 +38,7 @@ Paste your prompt or code snippet. The tool estimates total BPE tokens, word cou
 
 ---
 
-## 💡 Frequently Asked Questions (FAQ)
+## FAQ
 
 ### Is my data uploaded to any server?
 No. Everything executes locally inside your browser memory or extension sandbox. No telemetry, third-party scripts, or API requests are made.
@@ -53,7 +53,7 @@ const engine = require('./core');
 
 ---
 
-## 📄 License & Author
+## License and support
 
 - **Author:** [jju1s](https://github.com/cig13zs)
 - **License:** [MIT License](LICENSE)

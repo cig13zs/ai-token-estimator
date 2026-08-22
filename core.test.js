@@ -1,9 +1,11 @@
 const assert = require('assert');
-const AITokenEstimator = require('./core');
-
-const text = "Hello world! This is a simple test prompt for LLM tokenization.";
-const res = AITokenEstimator.estimate(text);
-assert.strictEqual(res.wordCount, 11);
-assert.strictEqual(res.gpt4 > 10, true);
-assert.strictEqual(res.gemini > 10, true);
-console.log('ok, all AITokenEstimator assertions passed');
+const Tool = require('./core');
+const english = Tool.estimate('Hello world. This is a rough size estimate.');
+const cjk = Tool.estimate('你好世界你好世界');
+const emoji = Tool.estimate('😀😀😀😀');
+assert.ok(english.range.low <= english.estimatedTokens && english.estimatedTokens <= english.range.high);
+assert.ok(cjk.estimatedTokens >= 8);
+assert.ok(emoji.estimatedTokens >= 8);
+assert.strictEqual('pricingEstimates' in english, false);
+assert.ok(/Exact counts require/.test(english.note));
+console.log('ok, honest token range assertions passed');

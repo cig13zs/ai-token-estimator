@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Ai Token Estimator",
   "version": "1.0.0",
-  "description": "Calculates exact character, word, and estimated BPE token counts for GPT-4, Claude, Gemini, and Llama offline.",
+  "description": "Estimate a rough model-agnostic token range locally. This is not an exact tokenizer or price calculator.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

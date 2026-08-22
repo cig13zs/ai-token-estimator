@@ -2,41 +2,28 @@
   if (typeof module === 'object' && module.exports) module.exports = factory();
   else root.AITokenEstimator = factory();
 })(typeof self !== 'undefined' ? self : this, function () {
-
+  'use strict';
   function estimate(text) {
-    if (!text || typeof text !== 'string') {
-      return { gpt4: 0, claude: 0, gemini: 0, llama: 0, wordCount: 0, charCount: 0 };
-    }
-
-    const charCount = text.length;
-    const words = text.match(/\b[a-zA-Z0-9_'-]+\b/g) || [];
-    const wordCount = words.length;
-
-    // Rule-based heuristic estimation calibrated against standard BPE tokenizers
-    // English text: ~4 chars per token on average (~1.3 tokens per word)
-    // Code or special chars: ~3 chars per token
-    const specialChars = (text.match(/[^a-zA-Z0-9\s]/g) || []).length;
-    const specialRatio = charCount > 0 ? specialChars / charCount : 0;
-
-    let baseFactor = 4.0;
-    if (specialRatio > 0.15) baseFactor = 3.2; // Code / JSON / Markup has higher token density
-
-    const rawTokenEst = Math.ceil(charCount / baseFactor);
-
+    text = String(text || '');
+    if (!text) return { charCount: 0, wordCount: 0, estimatedTokens: 0, range: { low: 0, high: 0 } };
+    const chars = Array.from(text);
+    const wordCount = (text.match(/[\p{L}\p{N}_'-]+/gu) || []).length;
+    let cjk = 0, emoji = 0, ascii = 0, punctuation = 0;
+    chars.forEach(function (char) {
+      if (/\p{Extended_Pictographic}/u.test(char)) emoji++;
+      else if (/[\u3400-\u9fff\uf900-\ufaff\u3040-\u30ff\uac00-\ud7af]/u.test(char)) cjk++;
+      else if (/[A-Za-z0-9]/.test(char)) ascii++;
+      else if (!/\s/u.test(char)) punctuation++;
+    });
+    const estimated = Math.max(1, Math.ceil(ascii / 4 + cjk + emoji * 2 + punctuation / 2 + Math.max(0, wordCount - ascii / 5) * 0.25));
     return {
-      charCount: charCount,
+      charCount: text.length,
+      codePointCount: chars.length,
       wordCount: wordCount,
-      gpt4: Math.round(rawTokenEst * 1.02),
-      claude: Math.round(rawTokenEst * 0.98),
-      gemini: Math.round(rawTokenEst * 1.00),
-      llama: Math.round(rawTokenEst * 1.05),
-      pricingEstimates: {
-        gpt4o_input: '$' + ((rawTokenEst / 1000000) * 2.50).toFixed(5),
-        claude35_input: '$' + ((rawTokenEst / 1000000) * 3.00).toFixed(5),
-        gemini15flash_input: '$' + ((rawTokenEst / 1000000) * 0.075).toFixed(5)
-      }
+      estimatedTokens: estimated,
+      range: { low: Math.max(1, Math.floor(estimated * 0.75)), high: Math.max(1, Math.ceil(estimated * 1.35)) },
+      note: 'Model-agnostic size estimate only. Exact counts require the tokenizer for the exact model and message format.'
     };
   }
-
   return { estimate: estimate };
 });
